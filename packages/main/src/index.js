@@ -27,7 +27,21 @@ ipcMain.handle("convert-pdf", async function (_, payload) {
     //   },
     // });
     win.loadURL(`${src}?seed=${new Date().getTime()}`);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    win.webContents.on("did-finish-load", async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const data = await win.webContents.printToPDF({
+        marginsType: 1,
+        pageSize: {
+          width: 157794 - 2 * 10000,
+          height: 210392 - 2 * 10000,
+        },
+      });
+      require("fs").writeFile(output, data, (error) => {
+        if (error) resolve(error);
+        else resolve();
+        win.close();
+      });
+    });
     // await win.webContents.executeJavaScript(`(()=>{
     //     document.querySelectorAll('*').forEach(function(node) {
     //       console.log(node.classList[0],node.computedStyleMap().get('font-weight'), node.computedStyleMap().get('font-family').toString())
@@ -40,19 +54,6 @@ ipcMain.handle("convert-pdf", async function (_, payload) {
     //       }
     //     });
     //   })()`);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const data = await win.webContents.printToPDF({
-      marginsType: 1,
-      pageSize: {
-        width: 157794 - 2 * 10000,
-        height: 210392 - 2 * 10000,
-      },
-    });
-    require("fs").writeFile(output, data, (error) => {
-      if (error) resolve(error);
-      else resolve();
-      win.close();
-    });
   });
   if (!error) {
     const pdfDoc = await PDFDocument.load(require("fs").readFileSync(output));

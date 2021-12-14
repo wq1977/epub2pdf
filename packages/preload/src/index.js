@@ -89,8 +89,12 @@ const api = {
       {}
     );
     return {
+      src: path,
       cover: require("path").join(tempEpub, epub.easy.epub2CoverUrl),
-      output: require("path").join(tempEpub, "..", "output.pdf"),
+      output: require("path").join(
+        require("path").dirname(path),
+        require("path").basename(path).replace(".epub", ".pdf")
+      ),
       content: epub.raw.json.opf.spine[0].itemref.map((item) => {
         const id = item.$.item.$.id;
         const src = item.$.item.$.href;
