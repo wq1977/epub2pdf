@@ -17,6 +17,10 @@ function fixCss(html) {
     /font-family:.*serif.*;/g,
     "font-family:FZLTZHK--GBK1-0;"
   );
+  html = html.replace(
+    /font-family:.*zw.*;/g,
+    "font-family:STSongti-SC-Regular;"
+  );
   return html;
 }
 
@@ -64,6 +68,7 @@ ipcMain.handle("convert-pdf", async function (_, payload) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       const data = await win.webContents.printToPDF({
         marginsType: 1,
+        printBackground: true,
         pageSize: {
           width: 157794 - 2 * 10000,
           height: 210392 - 2 * 10000,
