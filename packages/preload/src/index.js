@@ -49,12 +49,12 @@ const api = {
     const zip = new AdmZip(path);
     zip.extractAllTo(out, true);
   },
-  async convertPartPdf(src, output) {
+  async convertPartPdf(src, output, debug = false) {
     const dir = require("path").dirname(output);
     if (!require("fs").existsSync(dir)) {
       require("fs").mkdirSync(dir);
     }
-    await ipcRenderer.invoke("convert-pdf", { src, output });
+    await ipcRenderer.invoke("convert-pdf", { src, output, debug });
   },
   async itemPdfPath(item) {
     const { id, src, tempbase } = item;
@@ -62,7 +62,11 @@ const api = {
     const pdfPath = require("path").join(tempPDF, `${id}.pdf`);
     if (!require("fs").existsSync(pdfPath)) {
       const tempEpub = require("path").join(tempbase, "epub");
-      await api.convertPartPdf(`file://${tempEpub}/${src}`, pdfPath);
+      await api.convertPartPdf(
+        `http://127.0.0.1:7777${tempEpub}/${src}`,
+        pdfPath,
+        item.debug
+      );
     }
     return `file://${pdfPath}`;
   },

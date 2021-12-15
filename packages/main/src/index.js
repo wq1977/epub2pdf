@@ -2,7 +2,36 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { URL } from "url";
 import { PDFDocument } from "pdf-lib";
+const Koa = require("koa");
+const mime = require("mime-types");
+const srv = new Koa();
 
+function fixCss(html) {
+  html = html.replace(/line-height:.*;/g, "line-height:200%;");
+  html = html.replace(/font-family:.*STKai.*;/g, "font-family:STKaitiSC-Bold;");
+  html = html.replace(
+    /font-family:.*STSong.*;/g,
+    "font-family:STSongti-SC-Bold;"
+  );
+  html = html.replace(
+    /font-family:.*serif.*;/g,
+    "font-family:FZLTZHK--GBK1-0;"
+  );
+  return html;
+}
+
+srv.use(async (ctx) => {
+  var mimeType = mime.lookup(ctx.path);
+  console.log(ctx.path, mimeType);
+  ctx.response.set("content-type", mimeType);
+  if (ctx.path.endsWith("html") || ctx.path.endsWith("css")) {
+    ctx.body = fixCss(require("fs").readFileSync(ctx.path).toString());
+  } else {
+    ctx.body = require("fs").readFileSync(ctx.path);
+  }
+});
+
+srv.listen(7777);
 ipcMain.handle("select-epub", async () => {
   const { dialog } = require("electron");
   return await dialog.showOpenDialog({
@@ -14,18 +43,22 @@ ipcMain.handle("select-epub", async () => {
 ipcMain.handle("convert-pdf", async function (_, payload) {
   const { src, output } = payload;
   const error = await new Promise(async (resolve) => {
-    const win = new BrowserWindow({
-      transparent: true,
-      webPreferences: {
-        webSecurity: false,
-      },
-    });
-    win.hide();
-    // const win = new BrowserWindow({
-    //   webPreferences: {
-    //     webSecurity: false,
-    //   },
-    // });
+    let win;
+    if (payload.debug) {
+      win = new BrowserWindow({
+        webPreferences: {
+          webSecurity: false,
+        },
+      });
+    } else {
+      win = new BrowserWindow({
+        transparent: true,
+        webPreferences: {
+          webSecurity: false,
+        },
+      });
+      win.hide();
+    }
     win.loadURL(`${src}?seed=${new Date().getTime()}`);
     win.webContents.on("did-finish-load", async () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -39,21 +72,9 @@ ipcMain.handle("convert-pdf", async function (_, payload) {
       require("fs").writeFile(output, data, (error) => {
         if (error) resolve(error);
         else resolve();
-        win.close();
+        if (!payload.debug) win.close();
       });
     });
-    // await win.webContents.executeJavaScript(`(()=>{
-    //     document.querySelectorAll('*').forEach(function(node) {
-    //       console.log(node.classList[0],node.computedStyleMap().get('font-weight'), node.computedStyleMap().get('font-family').toString())
-    //       if (node.computedStyleMap().get('line-height').value !== 'normal') {
-    //         node.style.lineHeight = '200%';
-    //       }
-    //       const weight = node.computedStyleMap().get('font-weight').value
-    //       if (weight === weight + 0) {
-    //         node.style.fontWeight = weight + 200;
-    //       }
-    //     });
-    //   })()`);
   });
   if (!error) {
     const pdfDoc = await PDFDocument.load(require("fs").readFileSync(output));

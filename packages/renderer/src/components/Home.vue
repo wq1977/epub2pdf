@@ -43,7 +43,7 @@ export default defineComponent({
     },
     async openBook(item) {
       console.log(item);
-      this.$refs.iframe.src = await this.itemPdfPath({ ...item });
+      this.$refs.iframe.src = await this.itemPdfPath({ ...item, debug: true });
     },
     async loadepub() {
       const result = await this.selectePub();
