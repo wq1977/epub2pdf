@@ -23,7 +23,7 @@ const api = {
       coverImg = await pdfDoc.embedPng(require("fs").readFileSync(book.cover));
     }
     console.log("cover", coverImg.width, coverImg.height);
-    const scale = Math.max(447 / coverImg.width, 596 / coverImg.height);
+    const scale = Math.min(447 / coverImg.width, 596 / coverImg.height);
     const coverDims = coverImg.scale(scale);
     const page = pdfDoc.addPage();
     page.setSize(447, 596);
