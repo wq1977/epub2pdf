@@ -12,7 +12,7 @@ function fixCss(html) {
     <style>
     p{
       text-align: justify;
-      font-family:STSongti-SC-Regular;
+      font-family:FZLTSK--GBK1-0;
     }
     </style>
     `;
