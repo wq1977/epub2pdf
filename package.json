@@ -1,5 +1,5 @@
 {
-  "name": "vite-electron-builder",
+  "name": "epubviewer",
   "private": true,
   "engines": {
     "node": ">=v16.13",
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node scripts/build.js",
     "precompile": "cross-env MODE=production npm run build",
-    "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
+    "compile": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder build --config electron-builder.config.js --config.asar=true",
     "pretest": "npm run build",
     "test": "node tests/app.spec.js",
     "watch": "node scripts/watch.js",

@@ -17,10 +17,7 @@ function fixCss(html) {
     /font-family:.*serif.*;/g,
     "font-family:FZLTZHK--GBK1-0;"
   );
-  html = html.replace(
-    /font-family:.*zw.*;/g,
-    "font-family:STSongti-SC-Regular;"
-  );
+  html = html.replace(/font-family:.*zw.*;/g, "font-family:serif;");
   return html;
 }
 
