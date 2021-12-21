@@ -7,6 +7,17 @@ const mime = require("mime-types");
 const srv = new Koa();
 
 function fixCss(html) {
+  if (html.indexOf("<body") > 0) {
+    const defaultStyle = `
+    <style>
+    p{
+      text-align: justify;
+      font-family:FZLTZHK--GBK1-0;
+    }
+    </style>
+    `;
+    html = html.replace(/<body/i, `${defaultStyle}<body`);
+  }
   html = html.replace(/line-height:.*;/g, "line-height:200%;");
   html = html.replace(/font-family:.*STKai.*;/g, "font-family:STKaitiSC-Bold;");
   html = html.replace(
