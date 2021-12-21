@@ -12,7 +12,7 @@ function fixCss(html) {
     <style>
     p{
       text-align: justify;
-      font-family:FZLTZHK--GBK1-0;
+      font-family:STSongti-SC-Regular;
     }
     </style>
     `;
@@ -22,7 +22,7 @@ function fixCss(html) {
   html = html.replace(/font-family:.*STKai.*;/g, "font-family:STKaitiSC-Bold;");
   html = html.replace(
     /font-family:.*STSong.*;/g,
-    "font-family:STSongti-SC-Bold;"
+    "font-family:STSongti-SC-Regular;"
   );
   html = html.replace(
     /font-family:.*serif.*;/g,
