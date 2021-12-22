@@ -12,7 +12,7 @@ function fixCss(html) {
     <style>
     p{
       text-align: justify;
-      font-family:FZLTSK--GBK1-0;
+      font-family:FZXSSJW--GB1-0;
     }
     </style>
     `;
@@ -22,13 +22,10 @@ function fixCss(html) {
   html = html.replace(/font-family:.*STKai.*;/g, "font-family:STKaitiSC-Bold;");
   html = html.replace(
     /font-family:.*STSong.*;/g,
-    "font-family:STSongti-SC-Regular;"
+    "font-family:FZXSSJW--GB1-0;"
   );
-  html = html.replace(
-    /font-family:.*serif.*;/g,
-    "font-family:FZLTZHK--GBK1-0;"
-  );
-  html = html.replace(/font-family:.*zw.*;/g, "font-family:serif;");
+  html = html.replace(/font-family:.*serif.*;/g, "font-family:FZXSSJW--GB1-0;");
+  html = html.replace(/font-family:.*zw.*;/g, "font-family:FZXSSJW--GB1-0;");
   return html;
 }
 
