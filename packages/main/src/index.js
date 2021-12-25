@@ -26,6 +26,7 @@ function fixCss(html) {
   );
   html = html.replace(/font-family:.*serif.*;/g, "font-family:FZXSSJW--GB1-0;");
   html = html.replace(/font-family:.*zw.*;/g, "font-family:FZXSSJW--GB1-0;");
+  html = html.replace(/font-family:.*宋体.*;/g, "font-family:FZXSSJW--GB1-0;");
   return html;
 }
 
