@@ -15,6 +15,9 @@ function fixCss(html) {
       font-family:FZXSSJW--GB1-0;
       line-height:200%;
     }
+    .calibre5 {
+      margin-bottom:1em;
+    }
     </style>
     `;
     html = html.replace(/<body/i, `${defaultStyle}<body`);
