@@ -57,13 +57,13 @@ const api = {
     await ipcRenderer.invoke("convert-pdf", { src, output, debug });
   },
   async itemPdfPath(item) {
-    const { id, src, tempbase } = item;
+    const { id, base, src, tempbase } = item;
     const tempPDF = require("path").join(tempbase, "pdf");
     const pdfPath = require("path").join(tempPDF, `${id}.pdf`);
     if (!require("fs").existsSync(pdfPath)) {
       const tempEpub = require("path").join(tempbase, "epub");
       await api.convertPartPdf(
-        `http://127.0.0.1:7777${tempEpub}/${src}`,
+        `http://127.0.0.1:7777${tempEpub}/${base}${src}`,
         pdfPath,
         item.debug
       );
@@ -105,6 +105,7 @@ const api = {
         return {
           id,
           src,
+          base: epub.paths.opsRoot,
           label: ncxmap[id] || `__${id}`,
           tempbase,
         };
