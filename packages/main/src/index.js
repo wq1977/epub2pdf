@@ -8,11 +8,37 @@ const srv = new Koa();
 
 function fixCss(html) {
   if (html.indexOf("<body") > 0) {
+    const pathST = require("path").join(
+      __dirname,
+      "..",
+      "..",
+      "renderer",
+      "assets",
+      "fonts",
+      "FZSSJW.ttf"
+    );
+    const pathKT = require("path").join(
+      __dirname,
+      "..",
+      "..",
+      "renderer",
+      "assets",
+      "fonts",
+      "KaiTi.ttf"
+    );
     const defaultStyle = `
     <style>
+    @font-face { 
+      font-family: '方正书宋简体';
+      src: url('${pathST}');
+    }
+    @font-face {
+      font-family: '方正新楷体';
+      src: url('${pathKT}');
+    }
     p{
       text-align: justify;
-      font-family:FZXSSJW--GB1-0;
+      font-family:方正书宋简体;
       line-height:200%;
     }
     .calibre5 {
@@ -23,14 +49,12 @@ function fixCss(html) {
     html = html.replace(/<body/i, `${defaultStyle}<body`);
   }
   html = html.replace(/line-height:.*;/g, "line-height:200%;");
-  html = html.replace(/font-family:.*STKai.*;/g, "font-family:STKaitiSC-Bold;");
-  html = html.replace(
-    /font-family:.*STSong.*;/g,
-    "font-family:FZXSSJW--GB1-0;"
-  );
-  html = html.replace(/font-family:.*serif.*;/g, "font-family:FZXSSJW--GB1-0;");
-  html = html.replace(/font-family:.*zw.*;/g, "font-family:FZXSSJW--GB1-0;");
-  html = html.replace(/font-family:.*宋体.*;/g, "font-family:FZXSSJW--GB1-0;");
+  html = html.replace(/font-family:.*STKai.*;/g, "font-family:方正新楷体;");
+  html = html.replace(/font-family:.*STSong.*;/g, "font-family:方正书宋简体;");
+  html = html.replace(/font-family:.*serif.*;/g, "font-family:方正书宋简体;");
+  html = html.replace(/font-family:.*zw.*;/g, "font-family:方正书宋简体;");
+  html = html.replace(/font-family:.*宋体.*;/g, "font-family:方正书宋简体;");
+  html = html.replace(/<html/i, `<html style="font-size: 12pt"`);
   return html;
 }
 
